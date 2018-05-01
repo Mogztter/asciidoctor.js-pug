@@ -1,1 +1,1 @@
-IMG(src=node.image_uri(node.attributes.target) alt=node.attributes['alt'])
+img(src="placeholder.png" alt=node.getAttributes()['alt'])

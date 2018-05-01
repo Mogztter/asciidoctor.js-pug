@@ -3,4 +3,4 @@
 
 Image test
 
-image::source.png[Atl Text Here]
+image::source.png[Alt Text Here]

@@ -9,7 +9,7 @@ describe("asciidoctor", function() {
     const doc = asciidoctor.loadFile('./test/data/001-plain-text.adoc');
     const html = doc.convert();
     assert.include(html, '</p>');
-    assert.notInclude(html, '</PARA>');
+    assert.notInclude(html, '</para>');
     debug(html);
   });
 
@@ -24,7 +24,7 @@ describe("asciidoctor", function() {
     const html = doc.convert({template_dirs: './test/templates'});
 
     debug(html);
-    assert.include(html, '<PARA>');
+    assert.include(html, '<para>');
   });
 
   it("should find href and anchor's target", function() {
@@ -40,7 +40,7 @@ describe("asciidoctor", function() {
     const html = doc.convert({template_dirs: './test/templates'});
     debug(html);
 
-    assert.include(html, '<IMG src="source.png" alt="Atl Text Here"></IMG>');
+    assert.include(html, '<img src="source.png" alt="Alt Text Here"/>');
   });
 
   it("should build proper image URI", function() {
@@ -48,7 +48,7 @@ describe("asciidoctor", function() {
     const html = doc.convert();
     debug(html);
 
-    assert.include(html, '<IMG src="https://image.dir/source.png" alt="Atl Text Here"></IMG>');
+    assert.include(html, '<img src="https://image.dir/source.png" alt="Alt Text Here"/>');
   });
 
   it("should accept an array as `templates` parameter", function() {
@@ -82,7 +82,7 @@ describe("asciidoctor", function() {
     const html = doc.convert();
     debug(html);
 
-    assert.include(html, '<img src="https://image.dir/source.png" alt="Atl Text Here">');
+    assert.include(html, '<img src="https://image.dir/source.png" alt="Alt Text Here">');
   });
 
   it("should give priority to the last matching template", function() {
@@ -115,8 +115,8 @@ describe("asciidoctor", function() {
       const html = doc.convert();
       debug(html);
 
-      assert.include(html, '<PARA>');
-      assert.notInclude(html, '<IMG');
+      assert.include(html, '<para>');
+      assert.notInclude(html, '<img src="placeholder.png"');
     });
 
     it("should accept a star as catch all glob pattern", function() {
@@ -132,8 +132,8 @@ describe("asciidoctor", function() {
       const html = doc.convert();
       debug(html);
 
-      assert.include(html, '<PARA>');
-      assert.include(html, '<IMG');
+      assert.include(html, '<para>');
+      assert.include(html, '<img');
     });
 
     it("should accept a composite engine object as argument to template_engines", function() {
@@ -150,8 +150,8 @@ describe("asciidoctor", function() {
       const html = doc.convert();
       debug(html);
 
-      assert.include(html, '<PARA>');
-      assert.notInclude(html, '<IMG');
+      assert.include(html, '<para>');
+      assert.notInclude(html, '<img src="placeholder.png"');
     });
 
     it("should accept an engine object as argument to template_engines", function() {
@@ -164,8 +164,8 @@ describe("asciidoctor", function() {
       const html = doc.convert();
       debug(html);
 
-      assert.include(html, '<PARA>');
-      assert.include(html, '<IMG');
+      assert.include(html, '<para>');
+      assert.include(html, '<img');
     });
 
 
@@ -226,7 +226,7 @@ describe("asciidoctor", function() {
       const html = doc.convert();
       debug(html);
 
-      assert.include(html, '<img src="https://image.dir/source.png" alt="Atl Text Here">');
+      assert.include(html, '<img src="https://image.dir/source.png" alt="Alt Text Here">');
     });
 
     it("should give pass control to default handler if no next template (chain)", function() {
@@ -241,26 +241,26 @@ describe("asciidoctor", function() {
       const html = doc.convert();
       debug(html);
 
-      assert.include(html, '<img src="https://image.dir/source.png" alt="Atl Text Here">');
+      assert.include(html, '<img src="https://image.dir/source.png" alt="Alt Text Here">');
     });
 
     it("should allow to implement a decorator pattern", function() {
       const doc = asciidoctor.loadFile('./test/data/005-img-uri.adoc', {
         templates: [
-          { image: (ctx) => `<div class="IMG">${ctx.next()}</div>` },
+          { image: (ctx) => `<div class="img">${ctx.next()}</div>` },
         ],
       });
       const html = doc.convert();
       debug(html);
 
-      assert.match(html, RegExp('<div class="IMG">[\\s\\S]*<img src="https://image.dir/source.png" alt="Atl Text Here">[\\s\\S]*</div>'));
+      assert.match(html, RegExp('<div class="img">[\\s\\S]*<img src="https://image.dir/source.png" alt="Alt Text Here">[\\s\\S]*</div>'));
     });
 
     it("should allow to conditionally pass control to the base template", function() {
       const doc = asciidoctor.loadFile('./test/data/006-roles.adoc', {
         templates: [{
           paragraph: (ctx) => {
-            if (ctx.node.roles.has("Role1")) {
+            if (ctx.node.getRoles().includes("Role1")) {
               return 'ROLE1 REMOVED';
             }
 
