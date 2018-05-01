@@ -277,6 +277,22 @@ describe("asciidoctor", function() {
       assert.include(html, 'This has the second role');
       assert.notInclude(html, 'This has both roles');
     });
+  });
 
+  describe('node', function () {
+    it("should give access to the title", () => {
+      const doc = asciidoctor.loadFile('./test/data/007-titles.adoc', {
+        templates: [{
+          paragraph: (ctx) => {
+            let title = ctx.node.getTitle();
+            return title.replace('I&#8217;m a title', '--redacted--');
+          },
+        }],
+      });
+      const html = doc.convert();
+      debug(html);
+      assert.include(html, '--redacted--!');
+      assert.include(html, '--redacted--: with a subtitle');
+    });
   });
 });
